@@ -8,7 +8,7 @@ public class StatusController {
 
     @GetMapping("/api/status")
     public StatusResponse getStatus() {
-        return new StatusResponse("Telemtry-backend", "running");
+        return new StatusResponse("telemetry-backend", "running");
     }
 
 }

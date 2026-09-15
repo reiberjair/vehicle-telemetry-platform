@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import jakarta.validation.Valid;
+
 
 @RestController
 public class TelemetryController {
@@ -17,7 +19,7 @@ public class TelemetryController {
 
     @PostMapping("/api/telemetry")
     public TelemetryRequest receiveTelemetry(
-            @RequestBody TelemetryRequest sample) {
+            @Valid @RequestBody TelemetryRequest sample) {
         telemetryService.save(sample);
         return sample;
     }

@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.http.MediaType;
 
 @WebMvcTest(TelemetryController.class)
-@Import(TelemetryService.class)
+@Import({TelemetryService.class, TimeConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TelemetryControllerTest {
     @Autowired
@@ -39,7 +39,8 @@ public class TelemetryControllerTest {
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.sequence").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.rpm").value(1500));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.rpm").value(1500))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.receivedAt").isNotEmpty());
 
     }
 

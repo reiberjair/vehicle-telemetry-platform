@@ -18,14 +18,15 @@ public class TelemetryController {
 
 
     @PostMapping("/api/telemetry")
-    public TelemetryRequest receiveTelemetry(
+    public TelemetryResponse receiveTelemetry(
             @Valid @RequestBody TelemetryRequest sample) {
-        telemetryService.save(sample);
-        return sample;
+
+        return telemetryService.save(sample);
+
     }
     @GetMapping("/api/telemetry/latest")
-    public ResponseEntity<TelemetryRequest> getLatestTelemetry() {
-        TelemetryRequest latest = telemetryService.getLatest();
+    public ResponseEntity<TelemetryResponse> getLatestTelemetry() {
+        TelemetryResponse latest = telemetryService.getLatest();
 
         if (latest == null) {
             return ResponseEntity.noContent().build();

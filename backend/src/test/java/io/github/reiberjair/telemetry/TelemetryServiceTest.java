@@ -4,6 +4,7 @@ package io.github.reiberjair.telemetry;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import static org.mockito.Mockito.mock;
@@ -18,15 +19,17 @@ public class TelemetryServiceTest {
     private final Clock clock =
             Clock.fixed(fixedTime, ZoneOffset.UTC);
 
-        @Test
-        void shouldHaveNoSampleInitially() {
-            TelemetryService telemetryService = new TelemetryService(clock);
+    @Test
+    void shouldHaveNoSampleInitially() {
+        TelemetryService service =
+                new TelemetryService(clock, Duration.ofSeconds(2));
 
-            assertNull(telemetryService.getLatest());
-        }
+        assertNull(service.getLatest());
+    }
         @Test
         void shouldStoreSample(){
-            TelemetryService service = new TelemetryService(clock);
+            TelemetryService service =
+                    new TelemetryService(clock, Duration.ofSeconds(2));
             TelemetryRequest request = new TelemetryRequest(1, 1500);
 
             TelemetryResponse saved = service.save(request);
@@ -38,7 +41,7 @@ public class TelemetryServiceTest {
 
         @Test
         void shouldReplacePreviousSample(){
-            TelemetryService service = new TelemetryService(clock);
+            TelemetryService service = new TelemetryService(clock, Duration.ofSeconds(2));
             service.save(new TelemetryRequest(1, 1500));
 
             TelemetryResponse saved = service.save(new TelemetryRequest(2, 2300));
@@ -53,7 +56,7 @@ public class TelemetryServiceTest {
             Instant start = Instant.parse("2026-09-12T12:00:00Z");
 
             when(controlledClock.instant()).thenReturn(start);
-            TelemetryService service = new TelemetryService(controlledClock);
+            TelemetryService service = new TelemetryService(controlledClock, Duration.ofSeconds(2));
             service.save(new TelemetryRequest(1, 1500));
 
             when(controlledClock.instant()).thenReturn(start.plusMillis(1999));

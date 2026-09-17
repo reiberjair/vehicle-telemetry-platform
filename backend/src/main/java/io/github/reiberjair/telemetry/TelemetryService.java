@@ -4,17 +4,23 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.Clock;
 import java.time.Duration;
-
+import org.springframework.beans.factory.annotation.Value;
 
 
 @Service
 public class TelemetryService {
     private volatile TelemetryResponse latestSample;
     private  final Clock clock;
-    private static final Duration STALE_TIMEOUT = Duration.ofSeconds(2);
+    private final Duration staleTimeout;
 
-    public TelemetryService(Clock clock) {
+    public TelemetryService(Clock clock, @Value("${telemetry.stale-timeout}") Duration staleTimeout) {
+        if (staleTimeout.isZero() || staleTimeout.isNegative()) {
+            throw new IllegalArgumentException(
+                    "telemetry.stale-timeout must be positive");
+
+        }
         this.clock = clock;
+        this.staleTimeout = staleTimeout;
     }
 
     public TelemetryResponse save(TelemetryRequest sample){
@@ -40,7 +46,7 @@ public class TelemetryService {
                     Instant.now(clock)
             );
 
-            boolean stale = age.compareTo(STALE_TIMEOUT) >= 0;
+        boolean stale = age.compareTo(staleTimeout) >= 0;
 
             return new TelemetryResponse(
                     sample.sequence(),

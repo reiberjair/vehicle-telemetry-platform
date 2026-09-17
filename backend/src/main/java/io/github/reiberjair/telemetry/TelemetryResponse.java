@@ -5,7 +5,8 @@ import java.time.Instant;
 public record TelemetryResponse(
         Integer sequence,
         Integer rpm,
-        Instant receivedAt
+        Instant receivedAt,
+        boolean stale
 ) {
 
 }
